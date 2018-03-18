@@ -20,7 +20,8 @@ CREATE TABLE STEPS (
     STEP_ORDER INT NOT NULL,
     DESCRIPTION TEXT,
     COMMAND TEXT NOT NULL,
-    MAY_FAIL BOOLEAN DEFAULT('FALSE')
+    MAY_FAIL BOOLEAN DEFAULT('FALSE'),
+    ENABLED BOOLEAN DEFAULT('TRUE')
 );
 
 CREATE TABLE BUILDS (
@@ -44,8 +45,8 @@ INSERT INTO BUILD_DEFINITIONS VALUES
     ('CI build', 'Continuous integration build definition');
 
 INSERT INTO STEPS VALUES
-    (1, 'build', 'CI build', 100, 'Building with Cargo', 'cargo build --release', 'false'),
-    (2, 'test',  'CI build', 200, 'Testing with Cargo', 'cargo test --release', 'false');
+    (1, 'build', 'CI build', 100, 'Building with Cargo', 'cargo build --release', 'FALSE', 'TRUE'),
+    (2, 'test',  'CI build', 200, 'Testing with Cargo', 'cargo test --release', 'FALSE', 'TRUE');
 
 INSERT INTO BUILDS VALUES 
-    ('master', 'CI build', 'true');
+    ('master', 'CI build', 'TRUE');
