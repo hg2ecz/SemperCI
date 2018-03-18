@@ -9,13 +9,8 @@ I want a tool that can
 * watch multiple branches of a single repository
 * run multiple build definitions on the branch being changed (i.e. CI, code analysis, security scan)
 * run user-defines build/deploy steps
+* read configuration from an SQLize database
 
-## Development
+## Development status
 
-[ ] Configured git repository with Travis CI
-[ ] Configured logger (env-logger)
-[ ] Configuration reader
-[ ] File watcher for a git repository
-[ ] git repository handler
-[ ] Build step executor
-[ ] Notification through X
+Please see the (board)[https://github.com/fuszenecker/Yalci/projects/1]
