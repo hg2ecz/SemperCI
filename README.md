@@ -1,5 +1,5 @@
 # Yalci
-Yet another local continuous integration tool.
+**Y**et **a**nother **l**ocal **c**ontinuous **i**ntegration tool.
 
 ## Motivation
 
