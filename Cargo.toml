@@ -1,0 +1,6 @@
+[package]
+name = "yalci"
+version = "0.1.0"
+authors = ["fuszenecker"]
+
+[dependencies]

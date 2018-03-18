@@ -1,0 +1,4 @@
+{
+    "editor.wordBasedSuggestions": false,
+    "files.autoSave": "onFocusChange"
+}
