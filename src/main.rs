@@ -10,7 +10,9 @@ fn configure_logger() {
 
     builder.target(Target::Stdout);
 
-    if !env::var("RUST_LOG").is_ok() {
+    if env::var("RUST_LOG").is_ok() {
+        builder.parse(&env::var("RUST_LOG").unwrap());
+    } else {
         builder.parse("info");
     }
 
