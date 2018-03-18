@@ -22,6 +22,7 @@ struct Steps {
     name: String,
     description: String,
     command: String,
+    rollback_command: String,
     may_fail: Option<bool>
 }
 
