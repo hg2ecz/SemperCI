@@ -24,9 +24,7 @@ CREATE TABLE STEPS (
 );
 
 CREATE TABLE BUILDS (
-    NAME TEXT PRIMARY KEY,
-    DESCRIPTION TEXT,
-    BRANCH_NAME TEXT REFERENCES BRANCHES(BRANCH_NAME),
+    BRANCH_NAME TEXT REFERENCES BRANCHES(NAME),
     BUILD_DEFINITION REFERENCES BUILD_DEFINITIONS(NAME),
     ENABLED BOOLEAN DEFAULT('TRUE')
 );
@@ -39,17 +37,15 @@ INSERT INTO CONFIGURATION VALUES (
     '/home/fuszenecker/dev/Yalci'
 );
 
-INSERT INTO BRANCHES VALUES (
-    'master',
-    NULL,
-    'Master branch of Yalci'
-);
+INSERT INTO BRANCHES VALUES 
+    ('master', NULL, 'Master branch of Yalci');
 
-INSERT INTO BUILD_DEFINITIONS VALUES (
-    'yalci master',
-    'Build definition of Yalci master'
-);
+INSERT INTO BUILD_DEFINITIONS VALUES 
+    ('CI build', 'Continuous integration build definition');
 
 INSERT INTO STEPS VALUES
-    (1, 'build', 'yalci master', 100, 'Building with Cargo', 'cargo build --release', 'false'),
-    (2, 'test', 'yalci master', 200, 'Testing with Cargo', 'cargo test --release', 'false');
+    (1, 'build', 'CI build', 100, 'Building with Cargo', 'cargo build --release', 'false'),
+    (2, 'test',  'CI build', 200, 'Testing with Cargo', 'cargo test --release', 'false');
+
+INSERT INTO BUILDS VALUES 
+    ('master', 'CI build', 'true');
