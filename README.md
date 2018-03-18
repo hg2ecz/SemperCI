@@ -14,3 +14,7 @@ I want a tool that can
 ## Development status
 
 Please see the [board](https://github.com/fuszenecker/Yalci/projects/1).
+
+## Build status
+
+[![Build Status](https://travis-ci.org/fuszenecker/Yalci.svg?branch=master)](https://travis-ci.org/fuszenecker/Yalci)
