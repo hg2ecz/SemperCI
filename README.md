@@ -13,4 +13,4 @@ I want a tool that can
 
 ## Development status
 
-Please see the [board](https://github.com/fuszenecker/Yalci/projects/1)
+Please see the [board](https://github.com/fuszenecker/Yalci/projects/1).
