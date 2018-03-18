@@ -11,6 +11,7 @@ I want a tool that can
 * run user-defines build/deploy steps
 
 ## Development
+
 [ ] Configured git repository with Travis CI
 [ ] Configured logger (env-logger)
 [ ] Configuration reader
