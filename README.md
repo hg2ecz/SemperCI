@@ -23,14 +23,14 @@ GIT REPO
   |     |
   |     +-------- [CA-1] Build Definition 2 (i.e. static code analysis)
   |     |
-  |     +-------- [RT-1] Build Definition 2 (i.e. report generation)
+  |     +-------- [RT-1] Build Definition 3 (i.e. report generation)
   |
-  +-- Branch 2 -- [CI-2] Build Definition 2 (different from CI-1)
+  +-- Branch 2 -- [CI-2] Build Definition 1 (different from CI-1)
         |
         +-------- [CA-1] Build Definition 2 (same as CA-1)
 ```
 
-In the previos configuragion there are two banches, each branch triggers their build definition, CA-1 is a shared build definition: why would we duplicate a definition if it is not necessary?
+In the previos configuragion there are two branches, each branch triggers their build definitions, CA-1 is a shared build definition: why would we duplicate a definition if it is not necessary?
 
 ## Development status
 
