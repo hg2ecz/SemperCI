@@ -5,11 +5,11 @@ Yet another local continuous integration tool.
 
 My problems with another CI tools:
 * They are either too complex and bloatware (Jenkins)
-* ... or too simple
+* ... or too primitive
 
 I want a tool that can
 
-* run even on my Raspberry 
+* run even on my Raspberry
 * watch a local git repository
 * watch multiple branches of a single repository
 * run multiple (independent) build definitions on the branch that's been being changed (i.e. CI, code analysis, code metrics, security scan)
