@@ -1,4 +1,5 @@
 use std::vec::Vec;
+use rusqlite::Connection;
 
 struct Congiguration {
     repo_path: String,
@@ -26,4 +27,6 @@ struct Steps {
 }
 
 
-fn read_configuration() ->
+fn read_configuration() -> Configuration {
+    let conn = Connection::open_in_memory().unwrap();
+}
