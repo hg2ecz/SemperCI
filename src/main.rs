@@ -1,6 +1,7 @@
 #[macro_use]
 extern crate log;
 extern crate env_logger;
+extern crate rusqlite;
 
 use std::env;
 use env_logger::{Builder, Target};
