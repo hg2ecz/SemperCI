@@ -4,6 +4,7 @@ extern crate env_logger;
 extern crate rusqlite;
 
 mod configuration;
+mod settings;
 
 use std::env;
 use env_logger::{Builder, Target};
@@ -29,15 +30,21 @@ fn main() {
     info!("Yalci is starting...");
 
     info!("Reading configuration...");
-    match Configuration::new("configuration.db") {
+    match Configuration::new(settings::CONFIGURATION_DB) {
         Ok (configuration) => {
             info!("Watching repository: {}", configuration.repo_path);
+
+            for branch in configuration.branches {
+                info!("  * branch: {}", branch.name);
+            }
+
             info!("Yalci has started.");
         },
         Err (error) => {
             error!("Could not load configuration: {:?}", error);
         }
     }
+
     info!("Yalci is stopping...");
     info!("Yalci has stopped.");
 }
