@@ -3,8 +3,11 @@ extern crate log;
 extern crate env_logger;
 extern crate rusqlite;
 
+mod configuration;
+
 use std::env;
 use env_logger::{Builder, Target};
+use configuration::Configuration;
 
 fn configure_logger() {
     let mut builder = Builder::new();
@@ -24,6 +27,8 @@ fn main() {
     configure_logger();
 
     info!("Yalci is starting...");
+
+    let configuration = Configuration::new("configuration.db").unwrap();
 
     info!("Yalci has started");
 
