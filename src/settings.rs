@@ -1,0 +1,1 @@
+pub const CONFIGURATION_DB: &str = "configuration.db";
