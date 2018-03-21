@@ -9,12 +9,11 @@ all:
 
 clean:
 	cargo clean
-	rm -f Cargo.lock
 
 install:
 	make all
 	@echo This software will be installed to $(INSTALLDIR)
-	if [ ! -e $(INSTALLDIR) ]; then mkdir $(INSTALLDIR); fi
+	if [ ! -e $(INSTALLDIR) ]; then mkdir -p $(INSTALLDIR); fi
 	cp -p target/release/$(PROG) $(INSTALLDIR)
 	strip $(INSTALLDIR)/$(PROG)
 
