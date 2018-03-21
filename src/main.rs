@@ -28,11 +28,16 @@ fn main() {
 
     info!("Yalci is starting...");
 
-    let configuration = Configuration::new("configuration.db").unwrap();
-
-    info!("Yalci has started");
-
+    info!("Reading configuration...");
+    match Configuration::new("configuration.db") {
+        Ok (configuration) => {
+            info!("Watching repository: {}", configuration.repo_path);
+            info!("Yalci has started.");
+        },
+        Err (error) => {
+            error!("Could not load configuration: {:?}", error);
+        }
+    }
     info!("Yalci is stopping...");
-
-    info!("Yalci has stopped");
+    info!("Yalci has stopped.");
 }

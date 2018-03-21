@@ -32,7 +32,7 @@ impl Configuration {
     pub fn new(path: &str) -> Result<Configuration, ConfigurationError> {
         let conn = Connection::open(path)?;
 
-        let mut stmt = conn.prepare("SELECT id, name, time_created, data FROM configuration")?;
+        let mut stmt = conn.prepare("SELECT REPO_PATH FROM CONFIGURATION")?;
 
         let mut configuration_row = stmt.query_map(&[], |row| {
             Configuration {
