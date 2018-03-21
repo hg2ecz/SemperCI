@@ -39,3 +39,4 @@ Please see the [board](https://github.com/fuszenecker/Yalci/projects/1).
 ## Build status
 
 [![Build Status](https://travis-ci.org/fuszenecker/Yalci.svg?branch=master)](https://travis-ci.org/fuszenecker/Yalci)
+[![Build Status](https://travis-ci.org/fuszenecker/Yalci.svg?branch=stable)](https://travis-ci.org/fuszenecker/Yalci)
