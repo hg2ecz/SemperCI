@@ -1,5 +1,5 @@
 INSTALLDIR=$(HOME)/bin
-PROG = yalci
+PROG = semperci
 
 # Prerequest:
 # apt-get install   cargo make cmake zlib1g-dev libssl-dev
