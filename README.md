@@ -1,5 +1,5 @@
-# Yalci
-**Y**et **a**nother **l**ocal **c**ontinuous **i**ntegration tool.
+# SemperCI
+Yet another local continuous integration tool.
 
 ## Motivation
 
@@ -34,9 +34,9 @@ In the previos configuragion there are two branches, each branch triggers their 
 
 ## Development status
 
-Please see the [board](https://github.com/fuszenecker/Yalci/projects/1).
+Please see the [board](https://github.com/fuszenecker/SemperCI/projects/1).
 
 ## Build status
 
-[![Build Status](https://travis-ci.org/fuszenecker/Yalci.svg?branch=master)](https://travis-ci.org/fuszenecker/Yalci)
-[![Build Status](https://travis-ci.org/fuszenecker/Yalci.svg?branch=stable)](https://travis-ci.org/fuszenecker/Yalci)
+[![Build Status](https://travis-ci.org/fuszenecker/SemperCI.svg?branch=master)](https://travis-ci.org/fuszenecker/SemperCI)
+[![Build Status](https://travis-ci.org/fuszenecker/SemperCI.svg?branch=stable)](https://travis-ci.org/fuszenecker/SemperCI)
