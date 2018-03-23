@@ -163,6 +163,8 @@ impl From<RusqError> for ConfigurationError {
 mod configuration_tests {
     use Configuration;
     use rusqlite::Connection;
+    use configuration::load_steps;
+    use configuration::load_build_definitions;
 
     #[test]
     fn check_repo_path() {
@@ -176,12 +178,41 @@ mod configuration_tests {
         assert_eq!("master", configuration.branches[0].name);
     }
 
-    use configuration::load_steps;
-
     #[test]
     fn load_build_steps_by_build_name() {
         let conn = Connection::open("configuration.db").unwrap();
         let steps = load_steps(&conn, &String::from("CI build")).unwrap();       
+        assert!(!steps.is_empty());
+        assert_eq!(2, steps.len());
+        assert_eq!(String::from("test"), steps[1].name);
+
+        match steps[1].description {
+            Some (ref d) =>
+                assert_eq!(String::from("Testing with Cargo"), *d),
+            _ => assert!(false)
+        }
+
+        assert_eq!(String::from("cargo test --release"), steps[1].command);
+        assert!(steps[1].rollback_command.is_none());
+        assert!(!steps[1].may_fail);
+    }
+
+    #[test]
+    fn load_build_definitions_test() {
+        let conn = Connection::open("configuration.db").unwrap();
+        let defs = load_build_definitions(&conn).unwrap();
+
+        assert!(!defs.is_empty());
+        assert_eq!(1, defs.len());
+        assert_eq!("CI build", defs[0].name);
+
+        match defs[0].description {
+            Some (ref d) => assert_eq!("Continuous integration build definition", d),
+            _ => assert!(false)
+        }
+
+        let steps = &defs[0].steps;
+
         assert!(!steps.is_empty());
         assert_eq!(2, steps.len());
         assert_eq!(String::from("test"), steps[1].name);
