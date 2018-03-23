@@ -28,7 +28,7 @@ pub struct Step {
     pub description: Option<String>,
     pub command: String,
     pub rollback_command: Option<String>,
-    pub may_fail: Option<bool>
+    pub may_fail: bool
 }
 
 impl Configuration {
@@ -49,6 +49,8 @@ impl Configuration {
             Some (value) => {
                 let mut configuration = value?;
                 add_branches(&conn, &mut configuration)?;
+
+                //let _build_definitions = load_build_definitions(&conn)?;
                 Ok (configuration)
             }
             _ => Err(ConfigurationError::MissingTable("CONFIGURATION".to_string()))
@@ -77,6 +79,65 @@ fn add_branches(conn: &Connection, configuration: &mut Configuration) -> Result<
     Ok(())
 }
 
+#[allow(dead_code)]
+fn load_build_definitions(conn: &Connection) -> Result<Vec<BuildDefinition>, ConfigurationError> {
+    let mut stmt = conn.prepare("SELECT NAME, DESCRIPTION FROM BUILD_DEFINITIONS")?;
+
+    let definition_rows = stmt.query_map(&[], |row| {
+        BuildDefinition {
+            name: row.get(0),
+            description: row.get(1),
+            steps: Vec::new()
+        }
+    })?;
+
+    let mut build_definitions = Vec::new();
+
+    for build_definition in definition_rows {
+        debug!("Loading build definition: {:?}", &build_definition);
+
+        let mut definition = build_definition?;
+
+        definition.steps = load_steps(conn, &definition.name)?;
+
+        build_definitions.push(definition);
+    }
+
+    Ok(build_definitions)
+}
+
+#[allow(dead_code)]
+pub fn load_steps(conn: &Connection, build_definition_name: &String) -> Result<Vec<Step>, ConfigurationError> {
+    let mut stmt = conn.prepare("SELECT 
+        NAME, DESCRIPTION,
+        COMMAND, ROLLBACK_COMMAND, MAY_FAIL
+        FROM STEPS
+        WHERE BUILD_NAME = ?1
+            AND ENABLED = 'TRUE'
+        ORDER BY STEP_ORDER")?;
+
+    let step_rows = stmt.query_map(&[build_definition_name], |row| {
+        let may_fail: String = row.get(4);
+
+        Step {
+            name: row.get(0),
+            description: row.get(1),
+            command: row.get(2),
+            rollback_command: row.get(3),
+            may_fail: may_fail.to_uppercase() == "TRUE"
+        }
+    })?;
+
+    let mut steps = Vec::new();
+
+    for step in step_rows {
+        debug!("Loading step: {:?}", &step);
+        steps.push(step?);
+    }
+
+    Ok(steps)
+}
+
 #[derive(Debug)]
 pub enum ConfigurationError {
     NotFound(String),
@@ -101,15 +162,38 @@ impl From<RusqError> for ConfigurationError {
 #[cfg(test)]
 mod configuration_tests {
     use Configuration;
+    use rusqlite::Connection;
 
     #[test]
     fn check_repo_path() {
         let configuration = Configuration::new("configuration.db").unwrap();
-        assert_eq!("/home/fuszenecker/dev/Yalci", configuration.repo_path);
+        assert_eq!("/home/fuszenecker/dev/SemperCI", configuration.repo_path);
     }
 
     #[test]
     fn check_master_branch() {
         let configuration = Configuration::new("configuration.db").unwrap();
         assert_eq!("master", configuration.branches[0].name);
-    }}
+    }
+
+    use configuration::load_steps;
+
+    #[test]
+    fn load_build_steps_by_build_name() {
+        let conn = Connection::open("configuration.db").unwrap();
+        let steps = load_steps(&conn, &String::from("CI build")).unwrap();       
+        assert!(!steps.is_empty());
+        assert_eq!(2, steps.len());
+        assert_eq!(String::from("test"), steps[1].name);
+
+        match steps[1].description {
+            Some (ref d) =>
+                assert_eq!(String::from("Testing with Cargo"), *d),
+            _ => assert!(false)
+        }
+
+        assert_eq!(String::from("cargo test --release"), steps[1].command);
+        assert!(steps[1].rollback_command.is_none());
+        assert!(!steps[1].may_fail);
+    }
+}

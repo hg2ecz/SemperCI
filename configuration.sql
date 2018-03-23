@@ -18,7 +18,7 @@ CREATE TABLE STEPS (
     NAME TEXT NOT NULL,
     BUILD_NAME TEXT REFERENCES BUILDS(BUILD_NAME),
     STEP_ORDER INT NOT NULL,
-    DESCRIPTION TEXT,
+    DESCRIPTION TEXT NULL,
     COMMAND TEXT NOT NULL,
     ROLLBACK_COMMAND TEXT NULL,
     MAY_FAIL BOOLEAN DEFAULT('FALSE'),
@@ -32,15 +32,15 @@ CREATE TABLE BUILDS (
 );
 
 -------------------------------------------------------------------------------
--- Yalci default configuration
+-- SemperCI default configuration
 -------------------------------------------------------------------------------
 
 INSERT INTO CONFIGURATION VALUES (
-    '/home/fuszenecker/dev/Yalci'
+    '/home/fuszenecker/dev/SemperCI'
 );
 
 INSERT INTO BRANCHES VALUES 
-    ('master', NULL, 'Master branch of Yalci');
+    ('master', NULL, 'Master branch of SemperCI');
 
 INSERT INTO BUILD_DEFINITIONS VALUES 
     ('CI build', 'Continuous integration build definition');
