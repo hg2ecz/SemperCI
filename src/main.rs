@@ -27,7 +27,7 @@ fn configure_logger() {
 fn main() {
     configure_logger();
 
-    info!("Yalci is starting...");
+    info!("SemperCI is starting...");
 
     info!("Reading configuration...");
     match Configuration::new(settings::CONFIGURATION_DB) {
@@ -38,13 +38,13 @@ fn main() {
                 info!("  * branch: {}", branch.name);
             }
 
-            info!("Yalci has started.");
+            info!("SemperCI has started.");
         },
         Err (error) => {
             error!("Could not load configuration: {:?}", error);
         }
     }
 
-    info!("Yalci is stopping...");
-    info!("Yalci has stopped.");
+    info!("SemperCI is stopping...");
+    info!("SemperCI has stopped.");
 }
