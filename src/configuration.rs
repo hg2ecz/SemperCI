@@ -48,29 +48,33 @@ impl Configuration {
         match configuration_row.next() {
             Some (value) => {
                 let mut configuration = value?;
-
-                // Loading branches
-                let mut stmt = conn.prepare("SELECT NAME, LATEST_KNOWN_COMMIT, DESCRIPTION FROM BRANCHES")?;
-
-                let mut branch_rows = stmt.query_map(&[], |row| {
-                    Branch {
-                        name: row.get(0),
-                        last_known_commit: row.get(1),
-                        description: row.get(2),
-                        build_definitions: Vec::new()
-                    }
-                })?;
-
-                for branch in branch_rows {
-                    debug!("Adding branch: {:?}", &branch);
-                    configuration.branches.push(branch?);
-                }
-
+                add_branches(&conn, &mut configuration)?;
                 Ok (configuration)
             }
             _ => Err(ConfigurationError::MissingTable("CONFIGURATION".to_string()))
         }
     }
+}
+
+fn add_branches(conn: &Connection, configuration: &mut Configuration) -> Result<(), ConfigurationError> {
+    // Loading branches
+    let mut stmt = conn.prepare("SELECT NAME, LATEST_KNOWN_COMMIT, DESCRIPTION FROM BRANCHES")?;
+
+    let branch_rows = stmt.query_map(&[], |row| {
+        Branch {
+            name: row.get(0),
+            last_known_commit: row.get(1),
+            description: row.get(2),
+            build_definitions: Vec::new()
+        }
+    })?;
+
+    for branch in branch_rows {
+        debug!("Adding branch: {:?}", &branch);
+        configuration.branches.push(branch?);
+    }
+
+    Ok(())
 }
 
 #[derive(Debug)]
