@@ -1,4 +1,5 @@
 use std::vec::Vec;
+use std::collections::BTreeMap;
 use rusqlite::Connection;
 use rusqlite::Error as RusqError;
 
@@ -50,7 +51,22 @@ impl Configuration {
                 let mut configuration = value?;
                 add_branches(&conn, &mut configuration)?;
 
-                //let _build_definitions = load_build_definitions(&conn)?;
+                let build_definitions = load_build_definitions(&conn)?;
+                let connections = load_connections(&conn)?;
+
+                for branch in &configuration.branches {
+                    for connection in connections.iter().filter(|x| { x.0 == branch.name}) {
+                        info!("Adding build definition '{}' to branch '{}'", connection.1, connection.0);
+
+                        let definition = build_definitions.iter().filter(|x| { x.name == connection.1}).nth(1);
+
+                        match definition {
+                            Some (def) => branch.build_definitions.push(Box::new(def)),
+                            _ => error!("Did not find build definition {}", connection.1)
+                        };
+                    }
+                }
+
                 Ok (configuration)
             }
             _ => Err(ConfigurationError::MissingTable("CONFIGURATION".to_string()))
@@ -107,7 +123,7 @@ fn load_build_definitions(conn: &Connection) -> Result<Vec<BuildDefinition>, Con
 }
 
 #[allow(dead_code)]
-pub fn load_steps(conn: &Connection, build_definition_name: &String) -> Result<Vec<Step>, ConfigurationError> {
+fn load_steps(conn: &Connection, build_definition_name: &String) -> Result<Vec<Step>, ConfigurationError> {
     let mut stmt = conn.prepare("SELECT 
         NAME, DESCRIPTION,
         COMMAND, ROLLBACK_COMMAND, MAY_FAIL
@@ -138,11 +154,32 @@ pub fn load_steps(conn: &Connection, build_definition_name: &String) -> Result<V
     Ok(steps)
 }
 
+fn load_connections(conn: &Connection) -> Result<Vec<(String, String)>, ConfigurationError> {
+    let mut stmt = conn.prepare("SELECT BRANCH_NAME, BUILD_DEFINITION FROM BUILDS WHERE ENABLED='TRUE'")?;
+
+    let connection_rows = stmt.query_map(&[], |row| {
+        let branch_name: String = row.get(0);
+        let build_definition: String = row.get(1);
+
+        (branch_name, build_definition)
+    })?;
+
+    let mut connections: Vec<(String, String)> = Vec::new();
+
+    for connection in connection_rows {
+        debug!("Adding connection: {:?}", &connection);
+        connections.push(connection?);
+    }
+
+    Ok(connections)
+}
+
 #[derive(Debug)]
 pub enum ConfigurationError {
     NotFound(String),
     MissingTable(String),
-    GenericError
+    GenericError,
+    BadConfiguration(String)
 }
 
 impl From<RusqError> for ConfigurationError {
